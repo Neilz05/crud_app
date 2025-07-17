@@ -10,12 +10,47 @@ import {
     Routes,
 } from "react-router-dom";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 // import Home from "./components/Home";
 function Create() {
+    // const [data, setData] = useState([]);
+    // function handleGet() {
+    //     axios.get("/api/test")
+    //         .then(response => {
+    //             console.log(response.data);
+    //             setData(response.data);
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // }
+    // return (
+    //     <div>
+    //         <Button className="primary" onClick={handleGet}>TRY GET</Button>
+    //         {data.map((item, index) => (
+    //             <p key={index}>
+    //                 Name: {item.name}
+    //                 <br />
+    //                 Home: {item.home}
+    //             </p>
+    //         ))}
+    //     </div>
+    // )
+    // const payload = {
+    //     key1: "value1",
+    //     key2: "value2"
+    // };
+
+
+    // function handlePost(payload) {
+    //     axios.post("/api/test", payload)
+    //         .then(response => {
+    //             console.log(response.data);
+    //         })
+    //         .catch(error => console.error("Error:", error));
+    // }
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
     const [formData, setFormData] = useState({
-        id: '',
+        // id: '',
         Name: '',
         Age: '',
     });
@@ -29,10 +64,9 @@ function Create() {
 
         setFormData({
             ...formData,
-            id: uni,
-            [name]: value,
+            // id: uni,
+            [name]: name == "Age" ? parseInt(value) : value,
         })
-
     }
 
     const handleSubmit = (e) => {
@@ -40,16 +74,24 @@ function Create() {
         console.log('Form submitted:', formData);
         array.push(formData);
         // array.push({id: formData.id, Name: formData.name, Age: formData.age});
-        history("/");
+        axios.post("/api/test", formData)
+        .then(response => {
+            // console.log(response.data);
+            history("/");
+        })
+        .catch(error => console.error("Error:", error));
     }
 
+    const goHome = (e) => {
+        history("/");
+    }
     return (
         <div>
         <form onSubmit={handleSubmit}>
             <div className="input-form">
                 <h3>Name: </h3>
                 <input
-                    // value={formData.name}
+                    value={formData.name}
                     name="Name"
                     onChange={handleChange}
                 />
@@ -62,19 +104,15 @@ function Create() {
                     onChange={handleChange}
                 />
             </div>
-            <Button type="submit" onClick={handleSubmit} variant="primary" size="lg" className="me-2">
+            <Button type="submit" variant="primary" size="lg" className="me-2">
                 Submit
             </Button>
-            <Link to="/">
-                
-                <Button 
+                <Button onClick={goHome} 
                     variant="success" size="lg">
                     Home
                 </Button>
-            </Link>
         </form>
         </div>
-
     )
 }
 
